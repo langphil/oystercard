@@ -16,6 +16,10 @@ describe Oystercard do
       new_card = described_class.new 20
       expect(new_card.balance).to eq 20
     end
+
+    it 'expects default card state to be not travelling' do
+      expect(card).not_to be_in_journey
+    end
   end
 
   describe '#top_up' do
