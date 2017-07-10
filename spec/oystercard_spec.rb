@@ -6,6 +6,10 @@ describe Oystercard do
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:deduct).with(1).argument }
+  it { is_expected.to respond_to(:touch_in) }
+  it { is_expected.to respond_to(:touch_out) }
+  it { is_expected.to respond_to(:in_journey?) }
+  it { is_expected.to respond_to(:limit_line).with(1).argument }
 
   describe 'New card creation' do
     it 'should have a default balance of cash' do
@@ -38,18 +42,14 @@ describe Oystercard do
   describe '#deduct' do
     it 'allows for an amount to be deducted from the balance' do
       card.top_up 20
-      expect { card.deduct 10 }.to change{ card.balance }.by (- 10)
+      expect { card.deduct 10 }.to change { card.balance }.by (- 10)
     end
   end
 
   describe '#touch_in' do
-    it 'allows for a card to be set as in use' do
-      card.touch_in
-      expect(card.in_journey?).to eq true
-    end
-
     it 'raises an error if a card is touched in twice' do
       error = 'ERROR: This card has already been touched in'
+      card.top_up 20
       card.touch_in
       expect { card.touch_in }.to raise_error error
     end
