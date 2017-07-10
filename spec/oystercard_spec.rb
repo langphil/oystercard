@@ -6,10 +6,11 @@ describe Oystercard do
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:deduct).with(1).argument }
+  it { is_expected.to respond_to(:limit_line).with(1).argument }
   it { is_expected.to respond_to(:touch_in) }
   it { is_expected.to respond_to(:touch_out) }
   it { is_expected.to respond_to(:in_journey?) }
-  it { is_expected.to respond_to(:limit_line).with(1).argument }
+
 
   describe 'New card creation' do
     it 'should have a default balance of cash' do
