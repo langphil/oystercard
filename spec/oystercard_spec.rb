@@ -2,7 +2,6 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { described_class.new }
-  let(:card_in_use) { double(:card, travelling: true) }
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:deduct).with(1).argument }
@@ -42,37 +41,44 @@ describe Oystercard do
 
   describe '.deduct' do
     it 'allows for an amount to be deducted from the balance' do
-      card.top_up 20
+      card.top_up 10
       expect { card.deduct 10 }.to change { card.balance }.by (- 10)
     end
   end
 
   describe '.touch_in' do
-    it 'raises an error if the card has insufficient balance' do
-      error = 'ERROR: The balance on your card is too low to touch in'
-      expect { subject.touch_in }.to raise_error error
+    it 'allows for a card to touch in' do
+      card.top_up 10
+      expect(card.touch_in).to eq true
     end
 
     it 'raises an error if a card is touched in twice' do
       error = 'ERROR: This card has already been touched in'
-      card.top_up 20
+      card.top_up 10
       card.touch_in
+      expect { card.touch_in }.to raise_error error
+    end
+
+    it 'raises an error if the card has insufficient balance' do
+      error = 'ERROR: The balance on your card is too low to touch in'
       expect { card.touch_in }.to raise_error error
     end
   end
 
   describe '.touch_out' do
-    it 'allows for a card to be set as not in use' do
-      expect(card.in_journey?).to eq false
+    it 'allows card to touch out' do
+      card.top_up 10
+      card.touch_in
+      expect(card.touch_out).to eq false
     end
 
-    it 'raises an error if a card is touched in twice' do
+    it 'raises an error if a card is touched out twice' do
       error = 'ERROR: This card has already been touched out'
       expect { card.touch_out }.to raise_error error
     end
   end
 
-  context '.in_journey?' do
+  context '#in_journey?' do
     it 'allows a card to be in use or not' do
       expect(card.in_journey?).to be_truthy.or be(false)
     end
