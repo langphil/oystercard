@@ -27,7 +27,7 @@ describe Oystercard do
     end
   end
 
-  describe '#top_up' do
+  describe '.top_up' do
     it 'allows a user to top up the balance' do
       expect { card.top_up 1 }.to change { card.balance }.by 1
     end
@@ -40,14 +40,19 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
+  describe '.deduct' do
     it 'allows for an amount to be deducted from the balance' do
       card.top_up 20
       expect { card.deduct 10 }.to change { card.balance }.by (- 10)
     end
   end
 
-  describe '#touch_in' do
+  describe '.touch_in' do
+    it 'raises an error if the card has insufficient balance' do
+      error = 'ERROR: The balance on your card is too low to touch in'
+      expect { subject.touch_in }.to raise_error error
+    end
+
     it 'raises an error if a card is touched in twice' do
       error = 'ERROR: This card has already been touched in'
       card.top_up 20
@@ -56,7 +61,7 @@ describe Oystercard do
     end
   end
 
-  describe '#touch_out' do
+  describe '.touch_out' do
     it 'allows for a card to be set as not in use' do
       expect(card.in_journey?).to eq false
     end
@@ -67,9 +72,9 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey?' do
+  context '.in_journey?' do
     it 'allows a card to be in use or not' do
-      expect(card.in_journey?).to be(true).or be(false)
+      expect(card.in_journey?).to be_truthy.or be(false)
     end
   end
 end
