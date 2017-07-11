@@ -4,7 +4,7 @@ describe Oystercard do
   subject(:card) { described_class.new }
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
-  it { is_expected.to respond_to(:deduct).with(1).argument }
+  #it { is_expected.to respond_to(:deduct).with(1).argument }
   it { is_expected.to respond_to(:limit_line).with(1).argument }
   it { is_expected.to respond_to(:touch_in) }
   it { is_expected.to respond_to(:touch_out) }
@@ -36,13 +36,6 @@ describe Oystercard do
       error = 'ERROR: card has reached the balance limit'
       card.top_up maximum_balance
       expect { card.top_up 1 }.to raise_error error
-    end
-  end
-
-  describe '.deduct' do
-    it 'allows for an amount to be deducted from the balance' do
-      card.top_up 10
-      expect { card.deduct 10 }.to change { card.balance }.by (- 10)
     end
   end
 

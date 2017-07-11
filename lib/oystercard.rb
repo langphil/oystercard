@@ -1,6 +1,6 @@
 # Oystercard object
 class Oystercard
-  attr_reader :balance, :travelling
+  attr_reader :balance
 
   DEFAULT_BALANCE = 0
   MAXIMUM_BALANCE = 90
@@ -36,7 +36,8 @@ class Oystercard
     (amount + @balance) > MAXIMUM_BALANCE
   end
 
-  # Make this private
+  private
+
   def deduct(amount)
     @balance -= amount
   end
