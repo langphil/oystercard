@@ -71,12 +71,19 @@ describe Oystercard do
     it 'allows card to touch out' do
       card.top_up 10
       card.touch_in station
-      expect(card.touch_out).to eq nil
+      expect(card.touch_out station).to eq nil
     end
 
     it 'raises an error if a card is touched out twice' do
       error = 'ERROR: This card has already been touched out'
-      expect { card.touch_out }.to raise_error error
+      expect { card.touch_out station }.to raise_error error
+    end
+
+    it 'will save the exit station in the journeys array' do
+      card.top_up 10
+      card.touch_in station
+      card.touch_out station
+      expect(card.journeys).to have_key(:exit_station)
     end
   end
 

@@ -24,9 +24,10 @@ class Oystercard
     @entry_station = station
   end
 
-  def touch_out
+  def touch_out(station)
     raise 'ERROR: This card has already been touched out' unless @entry_station
     deduct MINIMUM_FARE
+    @journeys.merge!(exit_station: station)
     @entry_station = nil
   end
 
