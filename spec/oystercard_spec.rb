@@ -2,6 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { described_class.new }
+  subject(:card_zero) { described_class.new(0) }
   let(:station) { double(:station) }
 
   describe 'New card creation' do
@@ -29,7 +30,7 @@ describe Oystercard do
     end
 
     it 'raises an error if topped up above maximum balance' do
-      maximum_balance = Oystercard::MAXIMUM_BALANCE
+      maximum_balance = Oystercard::MAXIMUM_BALANCE - card.balance
       error = 'ERROR: card has reached the balance limit'
       card.top_up maximum_balance
       expect { card.top_up 1 }.to raise_error error
@@ -38,30 +39,26 @@ describe Oystercard do
 
   describe '.touch_in' do
     it 'allows for a card to touch in' do
-      card.top_up 10
       expect(card.touch_in station).to eq station
     end
 
     it 'raises an error if a card is touched in twice' do
       error = 'ERROR: This card has already been touched in'
-      card.top_up 10
       card.touch_in station
       expect { card.touch_in station }.to raise_error error
     end
 
     it 'raises an error if the card has insufficient balance' do
       error = 'ERROR: The balance on your card is too low to touch in'
-      expect { card.touch_in station }.to raise_error error
+      expect { card_zero.touch_in station }.to raise_error error
     end
 
     it 'will remember the station the card touched in' do
-      card.top_up 10
       card.touch_in station
       expect(card.entry_station).to eq station
     end
 
     it 'will save the entry station in the journeys array' do
-      card.top_up 10
       card.touch_in station
       expect(card.journey).to have_key(:entry_station)
     end
@@ -69,7 +66,6 @@ describe Oystercard do
 
   describe '.touch_out' do
     it 'allows card to touch out' do
-      card.top_up 10
       card.touch_in station
       expect(card.touch_out station).to eq nil
     end
@@ -80,7 +76,6 @@ describe Oystercard do
     end
 
     it 'will save the exit station in the journeys array' do
-      card.top_up 10
       card.touch_in station
       card.touch_out station
       expect(card.journey).to have_key(:exit_station)

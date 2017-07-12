@@ -4,7 +4,7 @@ require_relative 'station'
 class Oystercard
   attr_reader :balance, :entry_station, :journeys, :journey
 
-  DEFAULT_BALANCE = 0
+  DEFAULT_BALANCE = 10
   MAXIMUM_BALANCE = 90
   MINIMUM_FARE = 1
 
