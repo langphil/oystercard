@@ -4,14 +4,6 @@ describe Oystercard do
   subject(:card) { described_class.new }
   let(:station) { double(:station) }
 
-  it { is_expected.to respond_to(:top_up).with(1).argument }
-  #it { is_expected.to respond_to(:deduct).with(1).argument }
-  it { is_expected.to respond_to(:limit_line).with(1).argument }
-  it { is_expected.to respond_to(:touch_in).with(1).argument }
-  it { is_expected.to respond_to(:touch_out) }
-  it { is_expected.to respond_to(:in_journey?) }
-
-
   describe 'New card creation' do
     it 'should have a default balance of cash' do
       expect(card.balance).to eq Oystercard::DEFAULT_BALANCE
@@ -24,6 +16,10 @@ describe Oystercard do
 
     it 'expects default card state to be not travelling' do
       expect(card).not_to be_in_journey
+    end
+
+    it 'should have an empty journeys hash' do
+      expect(card.journeys).to be_empty
     end
   end
 
