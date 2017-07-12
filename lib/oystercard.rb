@@ -1,6 +1,6 @@
 # Oystercard object
 class Oystercard
-  attr_reader :balance, :entry_station, :journeys
+  attr_reader :balance, :entry_station, :journeys, :journey
 
   DEFAULT_BALANCE = 0
   MAXIMUM_BALANCE = 90
@@ -9,7 +9,8 @@ class Oystercard
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
     @entry_station = false
-    @journeys = {}
+    @journeys = []
+    @journey = {}
   end
 
   def top_up(amount)
@@ -20,14 +21,15 @@ class Oystercard
   def touch_in(station)
     raise 'ERROR: This card has already been touched in' if @entry_station
     raise 'ERROR: The balance on your card is too low to touch in' if @balance < MINIMUM_FARE
-    @journeys.merge!(entry_station: station)
+    @journey.merge!(entry_station: station)
     @entry_station = station
   end
 
   def touch_out(station)
     raise 'ERROR: This card has already been touched out' unless @entry_station
     deduct MINIMUM_FARE
-    @journeys.merge!(exit_station: station)
+    @journey.merge!(exit_station: station)
+    @journeys << @journey
     @entry_station = nil
   end
 

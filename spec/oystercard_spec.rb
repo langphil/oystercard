@@ -63,7 +63,7 @@ describe Oystercard do
     it 'will save the entry station in the journeys array' do
       card.top_up 10
       card.touch_in station
-      expect(card.journeys).to have_key(:entry_station)
+      expect(card.journey).to have_key(:entry_station)
     end
   end
 
@@ -83,7 +83,7 @@ describe Oystercard do
       card.top_up 10
       card.touch_in station
       card.touch_out station
-      expect(card.journeys).to have_key(:exit_station)
+      expect(card.journey).to have_key(:exit_station)
     end
   end
 
