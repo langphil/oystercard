@@ -2,11 +2,12 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { described_class.new }
+  let(:station) { double(:station) }
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
   #it { is_expected.to respond_to(:deduct).with(1).argument }
   it { is_expected.to respond_to(:limit_line).with(1).argument }
-  it { is_expected.to respond_to(:touch_in) }
+  it { is_expected.to respond_to(:touch_in).with(1).argument }
   it { is_expected.to respond_to(:touch_out) }
   it { is_expected.to respond_to(:in_journey?) }
 
@@ -42,27 +43,33 @@ describe Oystercard do
   describe '.touch_in' do
     it 'allows for a card to touch in' do
       card.top_up 10
-      expect(card.touch_in).to eq true
+      expect(card.touch_in station).to eq station
     end
 
     it 'raises an error if a card is touched in twice' do
       error = 'ERROR: This card has already been touched in'
       card.top_up 10
-      card.touch_in
-      expect { card.touch_in }.to raise_error error
+      card.touch_in station
+      expect { card.touch_in station }.to raise_error error
     end
 
     it 'raises an error if the card has insufficient balance' do
       error = 'ERROR: The balance on your card is too low to touch in'
-      expect { card.touch_in }.to raise_error error
+      expect { card.touch_in station }.to raise_error error
+    end
+
+    it 'will remember the station the card touched in' do
+      card.top_up 10
+      card.touch_in station
+      expect(card.entry_station).to eq station
     end
   end
 
   describe '.touch_out' do
     it 'allows card to touch out' do
       card.top_up 10
-      card.touch_in
-      expect(card.touch_out).to eq false
+      card.touch_in station
+      expect(card.touch_out).to eq nil
     end
 
     it 'raises an error if a card is touched out twice' do
