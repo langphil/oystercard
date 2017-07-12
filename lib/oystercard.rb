@@ -20,12 +20,14 @@ class Oystercard
   def touch_in(station)
     raise 'ERROR: This card has already been touched in' if @entry_station
     raise 'ERROR: The balance on your card is too low to touch in' if @balance < MINIMUM_FARE
+    @journeys.merge!(entry_station: station)
     @entry_station = station
   end
 
-  def touch_out
+  def touch_out(station)
     raise 'ERROR: This card has already been touched out' unless @entry_station
     deduct MINIMUM_FARE
+    @journeys.merge!(exit_station: station)
     @entry_station = nil
   end
 
