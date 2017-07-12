@@ -85,10 +85,15 @@
         null
       ],
       "/Users/Gnalp/Documents/makers-academy/Projects/oystercard/lib/journey.rb": [
-
+        1,
+        null
       ],
       "/Users/Gnalp/Documents/makers-academy/Projects/oystercard/spec/journey_spec.rb": [
-        1
+        1,
+        null,
+        1,
+        1,
+        null
       ],
       "/Users/Gnalp/Documents/makers-academy/Projects/oystercard/spec/oystercard_spec.rb": [
         1,
@@ -200,6 +205,6 @@
         null
       ]
     },
-    "timestamp": 1499895503
+    "timestamp": 1499895626
   }
 }
