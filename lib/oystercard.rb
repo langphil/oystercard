@@ -13,7 +13,6 @@ class Oystercard
     @balance = balance
     @entry_station = false
     @journeys = []
-    @journey = {}
   end
 
   def top_up(amount)
@@ -22,22 +21,18 @@ class Oystercard
   end
 
   def touch_in(station)
-    raise 'ERROR: This card has already been touched in' if @entry_station
     raise 'ERROR: The balance on your card is too low to touch in' if @balance < MINIMUM_FARE
-    @journey.merge!(entry_station: station)
     @entry_station = station
   end
 
   def touch_out(station)
-    raise 'ERROR: This card has already been touched out' unless @entry_station
     deduct MINIMUM_FARE
-    @journey.merge!(exit_station: station)
-    @journeys << @journey
+    @journeys << [entry_station, station]
     @entry_station = nil
   end
 
   def in_journey?
-    @entry_station
+    !!entry_station
   end
 
   def limit_line(amount)

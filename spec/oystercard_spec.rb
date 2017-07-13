@@ -4,6 +4,8 @@ describe Oystercard do
   subject(:card) { described_class.new }
   subject(:card_zero) { described_class.new(0) }
   let(:station) { double(:station) }
+  let(:station_one) { double(:station_one) }
+  let(:station_two) { double(:station_two) }
 
   describe 'New card creation' do
     it 'should have a default balance of cash' do
@@ -19,7 +21,7 @@ describe Oystercard do
       expect(card).not_to be_in_journey
     end
 
-    it 'should have an empty journeys hash' do
+    it 'should have an empty journeys array' do
       expect(card.journeys).to be_empty
     end
   end
@@ -42,12 +44,6 @@ describe Oystercard do
       expect(card.touch_in station).to eq station
     end
 
-    it 'raises an error if a card is touched in twice' do
-      error = 'ERROR: This card has already been touched in'
-      card.touch_in station
-      expect { card.touch_in station }.to raise_error error
-    end
-
     it 'raises an error if the card has insufficient balance' do
       error = 'ERROR: The balance on your card is too low to touch in'
       expect { card_zero.touch_in station }.to raise_error error
@@ -57,11 +53,6 @@ describe Oystercard do
       card.touch_in station
       expect(card.entry_station).to eq station
     end
-
-    it 'will save the entry station in the journeys array' do
-      card.touch_in station
-      expect(card.journey).to have_key(:entry_station)
-    end
   end
 
   describe '.touch_out' do
@@ -70,21 +61,27 @@ describe Oystercard do
       expect(card.touch_out station).to eq nil
     end
 
-    it 'raises an error if a card is touched out twice' do
-      error = 'ERROR: This card has already been touched out'
-      expect { card.touch_out station }.to raise_error error
+    it 'will save the exit station in the journey array' do
+      card.touch_in station_one
+      card.touch_out station_two
+      expect(card.journeys[-1]).to eq [station_one, station_two]
     end
 
-    it 'will save the exit station in the journeys array' do
+    it 'reduces the balance by the minimum fare' do
       card.touch_in station
       card.touch_out station
-      expect(card.journey).to have_key(:exit_station)
+      expect(card.balance).to eq 10 - Oystercard::MINIMUM_FARE
     end
   end
 
   context '#in_journey?' do
-    it 'allows a card to be in use or not' do
-      expect(card.in_journey?).to be_truthy.or be(false)
+    it 'checks if a card has been checked in' do
+      expect { card.touch_in station }.to change { card.in_journey? }.to true
+    end
+
+    it 'checks if a card has been checked out' do
+      card.touch_in station
+      expect { card.touch_out station }.to change { card.in_journey? }.to false
     end
   end
 end
