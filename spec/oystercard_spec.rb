@@ -51,20 +51,20 @@ describe Oystercard do
 
     it 'will remember the station the card touched in' do
       card.touch_in station
-      expect(card.entry_station).to eq station
+      expect(card.journeys.last.entry_station).to eq station
     end
   end
 
   describe '.touch_out' do
     it 'allows card to touch out' do
       card.touch_in station
-      expect(card.touch_out station).to eq nil
+      expect(card.touch_out station).to eq station
     end
 
-    it 'will save the exit station in the journey array' do
+    it 'will remember station in the journey array' do
       card.touch_in station_one
       card.touch_out station_two
-      expect(card.journeys[-1]).to eq [station_one, station_two]
+      expect(card.journeys.last.exit_station).to eq station_two
     end
 
     it 'reduces the balance by the minimum fare' do
