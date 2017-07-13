@@ -2,11 +2,17 @@ require './lib/oystercard'
 
 card = Oystercard.new 5
 journey = Journey.new
-station = Station.new 'Bank', 2
+station1 = Station.new 'Bank', 2
+station2 = Station.new 'Holland Park', 2
+station1 = Station.new 'Bank', 1
+station2 = Station.new 'Holland Park', 3
 
 p card
 p journey
-p station
+card.touch_in station1
+card.touch_out station2
+p card
+
 
 =begin
 station_one = Station.new 'Kenginston Olympia', 2

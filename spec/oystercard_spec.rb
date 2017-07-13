@@ -8,21 +8,21 @@ describe Oystercard do
   let(:station_two) { double(:station_two) }
 
   describe 'New card creation' do
-    it 'should have a default balance of cash' do
-      expect(card.balance).to eq Oystercard::DEFAULT_BALANCE
-    end
-
-    it 'allows a user to set a new balance' do
-      new_card = described_class.new 20
-      expect(new_card.balance).to eq 20
-    end
-
-    it 'expects default card state to be not travelling' do
+    it 'sets a new card as not in use' do
       expect(card).not_to be_in_journey
     end
 
-    it 'should have an empty journeys array' do
+    it 'ensures that their are no previous recorded journeys' do
       expect(card.journeys).to be_empty
+    end
+
+    it 'instantiates a new card has a default balance' do
+      expect(card.balance).to be_a_kind_of(Integer)
+    end
+
+    it 'allows a user to create a new card with a balance' do
+      new_card = described_class.new 20
+      expect(new_card.balance).to eq 20
     end
   end
 
@@ -49,7 +49,7 @@ describe Oystercard do
       expect { card_zero.touch_in station }.to raise_error error
     end
 
-    it 'will remember the station the card touched in' do
+    it 'remembers the entry station upon touching in' do
       card.touch_in station
       expect(card.journeys.last.entry_station).to eq station
     end
@@ -61,16 +61,16 @@ describe Oystercard do
       expect(card.touch_out station).to eq station
     end
 
-    it 'will remember station in the journey array' do
-      card.touch_in station_one
-      card.touch_out station_two
-      expect(card.journeys.last.exit_station).to eq station_two
-    end
-
     it 'reduces the balance by the minimum fare' do
       card.touch_in station
       card.touch_out station
       expect(card.balance).to eq 10 - Oystercard::MINIMUM_FARE
+    end
+
+    it 'remembers exit station upon touching out' do
+      card.touch_in station_one
+      card.touch_out station_two
+      expect(card.journeys.last.exit_station).to eq station_two
     end
   end
 

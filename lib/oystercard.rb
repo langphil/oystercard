@@ -5,11 +5,10 @@ require_relative 'journey'
 class Oystercard
   attr_reader :balance, :journeys
 
-  DEFAULT_BALANCE = 10
   MAXIMUM_BALANCE = 90
   MINIMUM_FARE = 1
 
-  def initialize(balance = DEFAULT_BALANCE)
+  def initialize(balance = 10)
     @balance = balance
     @journeys = []
   end
