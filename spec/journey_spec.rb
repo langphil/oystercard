@@ -13,7 +13,7 @@ describe Journey do
   end
 
   it 'sets by default a fare' do
-    expect(new_journey.fare).to eq Journey::PENALTY_FARE
+    expect(new_journey.fare).to eq Journey::MINIMUM_FARE
   end
 
   it 'checks if the journey has been completed' do
@@ -27,7 +27,7 @@ describe Journey do
     end
 
     it 'returns a penalty when not exit station is given' do
-      expect(new_journey.fare).to eq Journey::PENALTY_FARE
+      expect(new_journey.fare).to eq Journey::MINIMUM_FARE
     end
 
     context 'when passed an exit station' do

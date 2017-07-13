@@ -8,14 +8,6 @@ describe Oystercard do
   let(:station_two) { double(:station_two) }
 
   describe 'New card creation' do
-    it 'sets a new card as not in use' do
-      expect(card).not_to be_in_journey
-    end
-
-    it 'ensures that their are no previous recorded journeys' do
-      expect(card.journeys).to be_empty
-    end
-
     it 'instantiates a new card has a default balance' do
       expect(card.balance).to be_a_kind_of(Integer)
     end
@@ -23,6 +15,14 @@ describe Oystercard do
     it 'allows a user to create a new card with a balance' do
       new_card = described_class.new 20
       expect(new_card.balance).to eq 20
+    end
+    
+    it 'sets a new card as not in use' do
+      expect(card).not_to be_in_journey
+    end
+
+    it 'ensures that their are no previous recorded journeys' do
+      expect(card.journeys).to be_empty
     end
   end
 
@@ -41,7 +41,7 @@ describe Oystercard do
 
   describe '.touch_in' do
     it 'allows for a card to touch in' do
-      expect(card.touch_in station).to eq station
+      expect(card.touch_in station).to eq card.journeys
     end
 
     it 'raises an error if the card has insufficient balance' do
@@ -59,12 +59,6 @@ describe Oystercard do
     it 'allows card to touch out' do
       card.touch_in station
       expect(card.touch_out station).to eq station
-    end
-
-    it 'reduces the balance by the minimum fare' do
-      card.touch_in station
-      card.touch_out station
-      expect(card.balance).to eq 10 - Oystercard::MINIMUM_FARE
     end
 
     it 'remembers exit station upon touching out' do

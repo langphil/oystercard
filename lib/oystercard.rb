@@ -22,11 +22,10 @@ class Oystercard
     raise 'ERROR: The balance on your card is too low to touch in' if @balance < MINIMUM_FARE
     journey = Journey.new station
     @journeys << journey
-    journeys.last.entry_station
   end
 
   def touch_out(station)
-    deduct MINIMUM_FARE
+    deduct(@journeys.last.fare)
     journeys.last.set_exit_station(station)
   end
 
